@@ -3,3 +3,5 @@ TensorFlow implementation of Echo-State Network with WM (working memory) unit de
 [ESN_WM.py](ESN_WM.py) has the RNN cell implementation, specifically, within the custom "call" function
 
 [ESN_WM-usage.py](ESN_WM-usage.py) has a couple of basic tests, based on switching sin functions to negative by remembering certain inputs
+
+In the future, hoping to redo the implementation and tests from the paper

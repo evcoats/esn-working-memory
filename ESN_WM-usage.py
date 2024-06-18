@@ -120,7 +120,7 @@ def comparison_task1(leaky, sw):
   input_dim = 1
   wm_dim = 4
 
-  x = np.zeros((batches, batch_size, timesteps, input_dim+2))
+  x = np.zeros((batches, batch_size, timesteps, input_dim+1))
   y = np.zeros((batches, batch_size, timesteps, input_dim+wm_dim))
 
 
@@ -135,7 +135,7 @@ def comparison_task1(leaky, sw):
 
          xnew = np.concatenate((xnew,np.zeros((timesteps,1))), axis=1)
          
-         xnew = np.concatenate((xnew,np.exp(-200*t)), axis=1)
+         # xnew = np.concatenate((xnew,np.exp(-200*t)), axis=1)
 
          ynew = t*6*np.pi
 
@@ -166,7 +166,7 @@ def comparison_task1(leaky, sw):
       
             if  -0.05 < sin[j][0] < 0.05:  # check if the sinusoid crosses zero
                sign = np.random.choice([-1, 1])  # generate ones
-               if sign == 1 and numImpulse == 0:
+               if sign == 1 and numImpulse == 0 and j > 5:
                   numImpulse = 5
                   num1s+=1
                   if (num1s > 2):
@@ -227,7 +227,7 @@ def comparison_task1(leaky, sw):
   # print(Y_test.shape)
 
 
-  ESN_WM1, loss = ESN_WM.train_ESN_WM(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 3, wm_size = wm_dim, units = 300, connectivity = 0.1, leaky = leaky, sw=sw,spectral_radius = 0.8)
+  ESN_WM1, loss = ESN_WM.train_ESN_WM(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 30, wm_size = wm_dim, units = 300, connectivity = 0.1, leaky = leaky, sw=sw,spectral_radius = 0.8)
 
   Y_pred = ESN_WM1(X_test[0])
 
@@ -254,7 +254,7 @@ def standard_task1(leaky, sw):
   input_dim = 1
   wm_dim = 2
 
-  x = np.zeros((batches, batch_size, timesteps, input_dim+2))
+  x = np.zeros((batches, batch_size, timesteps, input_dim+1))
   y = np.zeros((batches, batch_size, timesteps, input_dim+wm_dim))
 
 
@@ -269,7 +269,6 @@ def standard_task1(leaky, sw):
 
          xnew = np.concatenate((xnew,np.zeros((timesteps,1))), axis=1)
          
-         xnew = np.concatenate((xnew,np.exp(-200*t)), axis=1)
 
 
          ynew = t*6*np.pi
@@ -296,7 +295,7 @@ def standard_task1(leaky, sw):
          for j in range(sin.shape[0]):
             if  -0.05 < sin[j][0] < 0.05:  # check if the sinusoid crosses zero
                sign = np.random.choice([-1, 1])  # generate ones
-               if sign == 1 and numImpulse == 0:
+               if sign == 1 and numImpulse == 0 and j > 5:
                   numImpulse = 5
                   num1s+=1
                   if (num1s > 4):
@@ -326,7 +325,7 @@ def standard_task1(leaky, sw):
   # print(Y_test.shape)
 
 
-  ESN_standard1, loss = ESN_standard.train_ESN_standard(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 200, units = 300, connectivity = 0.1, leaky = leaky, spectral_radius = 0.8, sw = sw)
+  ESN_standard1, loss = ESN_standard.train_ESN_standard(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 30, units = 300, connectivity = 0.1, leaky = leaky, spectral_radius = 0.8, sw = sw)
   
   Y_pred = ESN_standard1(X_test[0])
 

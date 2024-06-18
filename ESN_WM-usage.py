@@ -142,7 +142,7 @@ def comparison_task1(leaky, sw):
          
          # print(xnew.shape)
 
-         sin = np.sin(ynew) # generate the sinusoid
+         sin = np.sin(ynew)*0.5 # generate the sinusoid
 
           # xnew = np.sin(xnew) # generate the sinusoid
 
@@ -277,7 +277,7 @@ def standard_task1(leaky, sw):
          
          # print(xnew.shape)
 
-         sin = np.sin(ynew) # generate the sinusoid
+         sin = np.sin(ynew)*0.5 # generate the sinusoid
 
          # xnew = np.sin(xnew) # generate the sinusoid
 

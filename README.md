@@ -1,4 +1,4 @@
-TensorFlow implementation of Echo-State Network with WM (working memory) unit described in the paper ["A neurodynamical model for working memory"](https://pubmed.ncbi.nlm.nih.gov/21036537/) by R. Pascanu and H. Jaeger
+attempt at TensorFlow implementation of Echo-State Network with WM (working memory) unit described in the paper ["A neurodynamical model for working memory"](https://pubmed.ncbi.nlm.nih.gov/21036537/) by R. Pascanu and H. Jaeger
 
 [ESN_WM.py](ESN_WM.py) has the RNN cell implementation, specifically, within the custom "call" function
 

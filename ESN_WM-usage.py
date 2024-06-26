@@ -8,7 +8,7 @@ import tensorflow as tf
 def initial_task():
   batches = 20
   batch_size = 1000
-  timesteps = 100
+  timesteps = 200
   input_dim = 1
   wm_dim = 1
 
@@ -93,7 +93,7 @@ def initial_task():
   print(Y_test.shape)
 
 
-  ESN_WM1 = ESN_WM.train_ESN_WM(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 2, wm_size = 1, units = 300, connectivity = 0.05, leaky = 0.8, spectral_radius = 0.8)
+  ESN_WM1 = ESN_WM.train_ESN_WM(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 100, wm_size = 1, units = 300, connectivity = 0.05, leaky = 0.8, spectral_radius = 1.0)
 
   Y_pred = ESN_WM1(X_test[0])
 
@@ -115,10 +115,10 @@ def initial_task():
 
 def comparison_task1(leaky, sw):
   batches = 20
-  batch_size = 100
-  timesteps = 500
+  batch_size = 500
+  timesteps = 200
   input_dim = 1
-  wm_dim = 4
+  wm_dim = 5
 
   x = np.zeros((batches, batch_size, timesteps, input_dim+1))
   y = np.zeros((batches, batch_size, timesteps, input_dim+wm_dim))
@@ -127,7 +127,7 @@ def comparison_task1(leaky, sw):
   for k in range(batches):
       for i in range(batch_size):
 
-         t = np.linspace(0, 1, timesteps)
+         t = np.linspace(0, 2, timesteps)
 
          t = t.reshape(timesteps,1)
 
@@ -150,15 +150,16 @@ def comparison_task1(leaky, sw):
           #fill newly created dimension with zeros
           # print(sin.shape)
           # print(sin.shape[0])
-         sin = np.concatenate((sin, np.zeros((sin.shape[0], 1))), axis=1)
-         sin = np.concatenate((sin, np.zeros((sin.shape[0], 1))), axis=1)
-         sin = np.concatenate((sin, np.zeros((sin.shape[0], 1))), axis=1)
-         sin = np.concatenate((sin, np.zeros((sin.shape[0], 1))), axis=1)
+         sin = np.concatenate((sin, np.ones((sin.shape[0], 1))*(-0.5)), axis=1)
+         sin = np.concatenate((sin, np.ones((sin.shape[0], 1))*(-0.5)), axis=1)
+         sin = np.concatenate((sin, np.ones((sin.shape[0], 1))*(-0.5)), axis=1)
+         sin = np.concatenate((sin, np.ones((sin.shape[0], 1))*(-0.5)), axis=1)
+         sin = np.concatenate((sin, np.ones((sin.shape[0], 1))), axis=1)
 
          # print(sin)
          # print(sin)
 
-         sign = 1 # initialize the sign as positive
+         sign = 0 # initialize the sign as positive
          num1s = 0
          numImpulse = 0
         
@@ -166,36 +167,44 @@ def comparison_task1(leaky, sw):
       
             if  -0.05 < sin[j][0] < 0.05:  # check if the sinusoid crosses zero
                sign = np.random.choice([-1, 1])  # generate ones
-               if sign == 1 and numImpulse == 0 and j > 5:
+               if sign == 1 and numImpulse == 0 and j > 3:
                   numImpulse = 5
                   num1s+=1
-                  if (num1s > 2):
-                     num1s = 2
+                  if (num1s > 4):
+                     num1s = 4
+                  sign = 0
             
             if (numImpulse > 0):
                numImpulse -= 1
-               xnew[j][1] = 10
+               xnew[j][1] = 1
                   
             if (num1s == 1):
                sin[j][1] = 0.5
+               sin[j][2] = -0.5
+               sin[j][3] = -0.5
+               sin[j][4] = -0.5
 
             if (num1s == 2):
                sin[j][1] = 0.5
                sin[j][2] = 0.5
+               sin[j][3] = -0.5
+               sin[j][4] = -0.5
+               sin[j][5] = -1
                sin[j][0] *= -1  # if two ones are seen, switch to negative until 4 ones seen
 
             if (num1s == 3):
                sin[j][1] = 0.5
                sin[j][2] = 0.5
                sin[j][3] = 0.5
+               sin[j][4] = -0.5
+               sin[j][5] = -1
                sin[j][0] *= -1  # if two ones are seen, switch to negative until 4 ones seen
 
-            if (num1s == 3):
+            if (num1s == 4):
                sin[j][1] = 0.5
                sin[j][2] = 0.5
                sin[j][3] = 0.5
                sin[j][4] = 0.5
-              
 
          x[k][i] = xnew
 
@@ -227,41 +236,57 @@ def comparison_task1(leaky, sw):
   # print(Y_test.shape)
 
 
-  ESN_WM1, loss = ESN_WM.train_ESN_WM(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 30, wm_size = wm_dim, units = 300, connectivity = 0.1, leaky = leaky, sw=sw,spectral_radius = 0.8)
+  ESN_WM1, loss = ESN_WM.train_ESN_WM(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 1, wm_size = wm_dim, units = 500, connectivity = 0.1, leaky = leaky, sw=sw,spectral_radius = 1.0)
 
-  Y_pred = ESN_WM1(X_test[0])
+  Y_pred1 = ESN_WM1(X_test[0])
 
-  # # print(Y_pred.shape)
+  # print(Y_pred.shape)
 
   # plt.plot(Y_test[0,0,:], color="blue",linewidth=5)
   plt.plot(Y_test[0][0,:,2], color="purple",linewidth=5)
-  plt.plot(Y_test[0][0,:,1], color="orange",linewidth=5)
-  plt.plot(Y_test[0][0,:,3], color="purple",linewidth=5)
-  plt.plot(Y_test[0][0,:,4], color="orange",linewidth=5)
+  plt.plot(Y_test[0][0,:,1], color="orange",linewidth=7)
+  plt.plot(Y_test[0][0,:,3], color="black",linewidth=8)
+  plt.plot(Y_test[0][0,:,4], color="red",linewidth=9)
+  plt.plot(Y_test[0][0,:,5], color="red",linewidth=9)
   plt.plot(Y_test[0][0,:,0], color="black",linewidth=5)
-  plt.plot(Y_pred[0][0,:,:], color="red",linewidth=1)
-  plt.plot(Y_pred[1][0,:,:], color="green")
+  plt.plot(Y_pred1[0][0,:,:], color="red",linewidth=1)
+  plt.plot(Y_pred1[1][0,:,:], color="green")
 
   plt.show()
+  
+  
+#   Y_pred2 = ESN_WM1(X_test[1])
+
+
+#   plt.plot(Y_test[1][0,:,2], color="purple",linewidth=5)
+#   plt.plot(Y_test[1][0,:,1], color="orange",linewidth=7)
+#   plt.plot(Y_test[1][0,:,3], color="black",linewidth=8)
+#   plt.plot(Y_test[1][0,:,4], color="red",linewidth=9)
+#   plt.plot(Y_test[1][0,:,0], color="black",linewidth=5)
+#   plt.plot(Y_pred2[0][0,:,:], color="red",linewidth=1)
+#   plt.plot(Y_pred2[1][0,:,:], color="green")
+
+#   plt.show()
+  
+
 
   # print(Y_train.shape)
   return loss
 
 def standard_task1(leaky, sw):
   batches = 20
-  batch_size = 100
-  timesteps = 500
+  batch_size = 500
+  timesteps = 200
   input_dim = 1
-  wm_dim = 2
 
   x = np.zeros((batches, batch_size, timesteps, input_dim+1))
-  y = np.zeros((batches, batch_size, timesteps, input_dim+wm_dim))
+  y = np.zeros((batches, batch_size, timesteps, input_dim))
 
 
   for k in range(batches):
       for i in range(batch_size):
 
-         t = np.linspace(0, 1, timesteps)
+         t = np.linspace(0, 2, timesteps)
 
          t = t.reshape(timesteps,1)
 
@@ -288,22 +313,23 @@ def standard_task1(leaky, sw):
          # print(sin)
          # print(sin)
 
-         sign = 1 # initialize the sign as positive
+         sign = 0 # initialize the sign as positive
          num1s = 0
          numImpulse = 0
       
          for j in range(sin.shape[0]):
-            if  -0.05 < sin[j][0] < 0.05:  # check if the sinusoid crosses zero
+            if  -0.05 < sin[j][0] < 0.05: # check if the sinusoid crosses zero
                sign = np.random.choice([-1, 1])  # generate ones
-               if sign == 1 and numImpulse == 0 and j > 5:
+               if sign == 1 and numImpulse == 0 and j > 3:
                   numImpulse = 5
                   num1s+=1
                   if (num1s > 4):
                      num1s = 4
+               sign = 0
             
             if (numImpulse > 0):
                numImpulse -= 1
-               xnew[j][1] = 10
+               xnew[j][1] = 1
                   
             if (num1s == 2 or num1s == 3):
                sin[j][0] *= -1  # if two ones are seen, switch to negative until 4 ones
@@ -325,7 +351,7 @@ def standard_task1(leaky, sw):
   # print(Y_test.shape)
 
 
-  ESN_standard1, loss = ESN_standard.train_ESN_standard(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 30, units = 300, connectivity = 0.1, leaky = leaky, spectral_radius = 0.8, sw = sw)
+  ESN_standard1, loss = ESN_standard.train_ESN_standard(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 100, units = 500, connectivity = 0.1, leaky = leaky, spectral_radius = 1.0, sw = sw)
   
   Y_pred = ESN_standard1(X_test[0])
 
@@ -349,14 +375,14 @@ def standard_task1(leaky, sw):
 losses = []
 
 for leaky_iter in range(1):
-   for sw_iter in range(1):
+   for sw_iter in range(2):
       losses.append(comparison_task1(0.6+(leaky_iter)*0.2,1.2+(0.3*sw_iter)))
       losses.append(standard_task1(0.6+(leaky_iter)*0.2,1.2+(0.3*sw_iter)))
 
 print(losses)
 idx = 0 
 for leaky_iter in range(1):
-   for sw_iter in range(1):
+   for sw_iter in range(2):
       for comp_iter in range(2):
          type = "wm_esn"
          if (comp_iter == 1):

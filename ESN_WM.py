@@ -83,7 +83,7 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
         kernel_initializer: Initializer = "glorot_uniform",
         recurrent_initializer: Initializer = "glorot_uniform",
         bias_initializer: Initializer = "zeros",
-        wm_back_connectivity: float = 0.1,
+        wm_back_connectivity: float = 1,
 
         **kwargs
     ):
@@ -172,9 +172,17 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
         
         self.leaky = tf.Variable(self.leaky, name="leaky",
                 dtype=tf.float32,
-                trainable=True)
+                trainable=False)
 
         self.wmb = tf.Variable(1, name="wmb",
+                dtype=tf.float32,
+                trainable=False)
+
+        self.wmscale = tf.Variable(1, name="wmscale",
+                dtype=tf.float32,
+                trainable=True)
+        
+        self.wmleaky = tf.Variable(1, name="wmleaky",
                 dtype=tf.float32,
                 trainable=True)
 
@@ -204,9 +212,17 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
 
         self.wm_kernel = self.add_weight(
             name="wm_kernel",
-            shape=[self.units+self.wm_size, self.wm_size],
+            shape=[input_size+self.units+self.wm_size, self.wm_size],
             trainable=True,
             initializer=self.kernel_initializer,
+            dtype=self.dtype,
+        )
+
+        self.wm_bias = self.add_weight(
+            name="wm_bias",
+            shape=[self.wm_size],
+            initializer=self.bias_initializer,
+            trainable=True,
             dtype=self.dtype,
         )
 
@@ -231,10 +247,10 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
         self.built = True
 
     def call(self, inputs, state):
-        in_matrix = tf.concat([inputs, state[0]], axis=1)
+        in_matrix = tf.concat([inputs*self.sw, state[0]], axis=1)
         weights_matrix = tf.concat([self.kernel, self.recurrent_kernel], axis=0)
 
-        output = tf.linalg.matmul(in_matrix, weights_matrix*self.sw)
+        output = tf.linalg.matmul(in_matrix, weights_matrix)
 
 
         if self.use_bias:
@@ -244,11 +260,15 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
 
         output = (1 - self.leaky) * state[0] + self.leaky * output
 
-        wm_input = tf.concat([output, state[1]], axis=1)
+        wm_input = tf.concat([output * self.wmscale, state[1]*self.wmleaky], axis=1)
 
-        wm_output = tf.linalg.matmul(wm_input, self.wm_kernel)
+        wm_input = tf.concat([wm_input, inputs], axis=1)
 
-        wm_output = tf.linalg.matmul(wm_output, self.wm_self)        
+        wm_output = tf.linalg.matmul(wm_input, self.wm_kernel) + self.wm_bias
+
+        wm_output = wm_output + tf.linalg.matmul(wm_output, self.wm_self)        
+
+        # wm_output = (1 - self.wmleaky) * state[1] + self.wmleaky * wm_output
 
         change = tf.linalg.matmul(wm_output, self.wm_kernel_back)
 
@@ -335,9 +355,15 @@ def train_ESN_WM(X_train, Y_train, output_layer_size, epochs, wm_size, units, co
 
                 predictions = model(x_batch_train)
 
+                # print(y_batch_train[:,:,1:])
+
+                # print(predictions[1][:,:,:])
+
                 loss_value_standard = loss_fn(y_true = y_batch_train[:,:,0], y_pred = predictions[0][:,:,0])
 
                 loss_value_wm = loss_fn(y_true = y_batch_train[:,:,1:], y_pred = predictions[1][:,:,:])
+
+
 
             # print()
             # print(model.get_layer("ESN_WM").variables)

@@ -268,7 +268,6 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
 
         wm_output = wm_output + tf.linalg.matmul(wm_output, self.wm_self)        
 
-        # wm_output = (1 - self.wmleaky) * state[1] + self.wmleaky * wm_output
 
         change = tf.linalg.matmul(wm_output, self.wm_kernel_back)
 

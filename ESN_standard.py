@@ -163,11 +163,11 @@ class ESNCell(keras.layers.AbstractRNNCell):
 
         self.sw = tf.Variable(self.sw, name="sw",
             dtype=tf.float32,
-            trainable=True)
+            trainable=False)
         
         self.leaky = tf.Variable(self.leaky, name="leaky",
             dtype=tf.float32,
-            trainable=True)
+            trainable=False)
 
 
         print(self.sw)
@@ -275,5 +275,13 @@ def train_ESN_standard(X_train, Y_train, output_layer_size, epochs, units, conne
                     "Training loss (for general loss) at step %d: %.4f"
                     % (step1, float(loss_value_standard))
                 )
+
+    f = open("losses\losses.txt", "a")
+
+    f.write("ESNSTD w/ {} {} {} {} {} {} {} \n".format(output_layer_size, epochs, units, connectivity, leaky,sw, spectral_radius))
+    f.write("Standard Loss: {} \n".format(loss_value_standard))
+    f.write("\n")
+
+    f.close()
 
     return (model, float(loss_value_standard))

@@ -167,7 +167,7 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
         
         self.sw = tf.Variable(self.sw, name="sw",
                         dtype=tf.float32,
-                        trainable=True)
+                        trainable=False)
         
         
         self.leaky = tf.Variable(self.leaky, name="leaky",
@@ -180,7 +180,7 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
 
         self.wmscale = tf.Variable(1, name="wmscale",
                 dtype=tf.float32,
-                trainable=True)
+                trainable=False)
         
         self.wmleaky = tf.Variable(1, name="wmleaky",
                 dtype=tf.float32,
@@ -260,18 +260,19 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
 
         output = (1 - self.leaky) * state[0] + self.leaky * output
 
-        wm_input = tf.concat([output * self.wmscale, state[1]*self.wmleaky], axis=1)
+        wm_input = tf.concat([output, self.wmleaky*state[1]], axis=1)
+
+        wm_input = wm_input
 
         wm_input = tf.concat([wm_input, inputs], axis=1)
 
         wm_output = tf.linalg.matmul(wm_input, self.wm_kernel) + self.wm_bias
 
-        wm_output = wm_output + tf.linalg.matmul(wm_output, self.wm_self)        
-
+        wm_output = (wm_output + tf.linalg.matmul(wm_output, self.wm_self)) * self.wmscale        
 
         change = tf.linalg.matmul(wm_output, self.wm_kernel_back)
 
-        output = output + self.wmb*change
+        output = self.activation(output + self.wmb*change)
         
         return (output,wm_output), (output,wm_output)
 
@@ -318,7 +319,6 @@ def ESN_WM_Model(input_shape, num_outputs, num_timesteps, wm_size, units, connec
 
     outputs = keras.layers.Dense(num_outputs, name="outputs")
 
-
     outputsDense = outputs(modelOutputs[0])
     
     model = keras.Model(inputs, (outputsDense,modelOutputs[1]), name="ESN_WM_Model")
@@ -335,6 +335,7 @@ def train_ESN_WM(X_train, Y_train, output_layer_size, epochs, wm_size, units, co
     loss_fn = keras.losses.MeanSquaredError(reduction='sum_over_batch_size')
     optimizer = keras.optimizers.legacy.Adam(learning_rate=0.01)
     loss_value_standard = None
+    loss_value_wm = None
 
     model = ESN_WM_Model(input_shape = X_train.shape[-1], num_outputs = output_layer_size, num_timesteps=X_train.shape[2], wm_size=wm_size, units=units, connectivity=connectivity, leaky=leaky, sw=sw, spectral_radius=spectral_radius)
     
@@ -400,6 +401,14 @@ def train_ESN_WM(X_train, Y_train, output_layer_size, epochs, wm_size, units, co
                     % (step1, float(loss_value_wm))
                 )
 
+    f = open("losses\losses.txt", "a")
+
+    f.write("ESNWM w/ {} {} {} {} {} {} {} {} \n".format(output_layer_size, epochs, wm_size, units, connectivity, leaky,sw, spectral_radius))
+    f.write("Standard Loss: {} \n".format(loss_value_standard))
+    f.write("WM Loss: {} \n".format(loss_value_wm))
+    f.write("\n")
+
+    f.close()
 
     return (model,float(loss_value_standard))
 

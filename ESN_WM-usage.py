@@ -9,7 +9,7 @@ import tensorflow as tf
 # on task1, the ESN with 5 WM units trained corresponding memory of the runs of ones on the first four, and the sign to flip to on the fifth, outperforms a standard ESN on the task while it is flipped. 
 # this is a step towards demonstrating the practical memory limit of a standard ESN 
 
-def esn_wm_task1(leaky, sw):
+def esn_wm_task1(leaky, sw, iter_num):
   batches = 20
   batch_size = 500
   timesteps = 200
@@ -97,7 +97,7 @@ def esn_wm_task1(leaky, sw):
   # print(Y_test.shape)
 
 
-  ESN_WM1, loss = ESN_WM.train_ESN_WM(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 100, wm_size = wm_dim, units = 500, connectivity = 0.1, leaky = leaky, sw=sw,spectral_radius = 1.0)
+  ESN_WM1, loss = ESN_WM.train_ESN_WM(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 50, wm_size = wm_dim, units = 500, connectivity = 0.1, leaky = leaky, sw=sw,spectral_radius = 1.0)
 
   Y_pred1 = ESN_WM1(X_test[0])
 
@@ -111,16 +111,17 @@ def esn_wm_task1(leaky, sw):
   plt.plot(Y_test[0][0,:,5], color="red",linewidth=9)
   plt.plot(Y_test[0][0,:,0], color="black",linewidth=5)
   plt.plot(Y_pred1[0][0,:,:], color="red",linewidth=1)
-  plt.plot(Y_pred1[1][0,:,:4], color="green")
-  plt.plot(Y_pred1[1][0,:,5], color="gray")
+  plt.plot(Y_pred1[1][0,:,:3], color="green")
+  plt.plot(Y_pred1[1][0,:,4], color="gray")
 
 
-  plt.show()
-  
-  
+  plt.savefig('models\\figures\ESNWM' + str(iter_num)+ '.png')
+  ESN_WM1.save_weights('models\ESNWM\\'+str(iter_num))
+  plt.clf()
+
   return loss
 
-def esn_standard_task1(leaky, sw):
+def esn_standard_task1(leaky, sw, iter_num):
   batches = 20
   batch_size = 500
   timesteps = 200
@@ -176,7 +177,7 @@ def esn_standard_task1(leaky, sw):
   Y_test = y[batches-2:]
 
 
-  ESN_standard1, loss = ESN_standard.train_ESN_standard(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 100, units = 500, connectivity = 0.1, leaky = leaky, spectral_radius = 1.0, sw = sw)
+  ESN_standard1, loss = ESN_standard.train_ESN_standard(X_train=X_train, Y_train=Y_train, output_layer_size=1, epochs = 50, units = 500, connectivity = 0.1, leaky = leaky, spectral_radius = 1.0, sw = sw)
   
   Y_pred = ESN_standard1(X_test[0])
 
@@ -184,29 +185,38 @@ def esn_standard_task1(leaky, sw):
   plt.plot(Y_test[0,0,:], color="blue",linewidth=5)
   plt.plot(Y_test[0][0,:,0], color="black",linewidth=5)
   plt.plot(Y_pred[0,:,:], color="red",linewidth=1)
-
-  plt.show()
-
+  
+  plt.savefig("models\\figures\ESNSTD"+str(iter_num) + '.png')
+  ESN_standard1.save_weights('models\ESNSTD\\'+str(iter_num))
+  plt.clf()
 
   return loss
 
 
 losses = []
+idx = 0 
+for leaky_iter in range(2):
+   for sw_iter in range(3):
+      losses.append(esn_wm_task1(0.6+(leaky_iter)*0.2,0.8+(0.3*sw_iter),idx))
 
-for leaky_iter in range(1):
-   for sw_iter in range(2):
-      losses.append(esn_wm_task1(0.6+(leaky_iter)*0.2,1.2+(0.3*sw_iter)))
-      losses.append(esn_standard_task1(0.6+(leaky_iter)*0.2,1.2+(0.3*sw_iter)))
+      print("Loss for %s with leaky %s and sw %s: %s" % ("ESN_WM", str(0.6+(leaky_iter)*0.2), str(0.8+(0.3*sw_iter)), losses[idx]))
+      idx += 1
+
+      losses.append(esn_standard_task1(0.6+(leaky_iter)*0.2,0.8+(0.3*sw_iter),idx))
+
+      print("Loss for %s with leaky %s and sw %s: %s" % ("ESN_STANDARD", str(0.6+(leaky_iter)*0.2), str(0.8+(0.3*sw_iter)), losses[idx]))
+      idx += 1
+
 
 print(losses)
 idx = 0 
-for leaky_iter in range(1):
-   for sw_iter in range(2):
+for leaky_iter in range(2):
+   for sw_iter in range(3):
       for comp_iter in range(2):
          type = "wm_esn"
          if (comp_iter == 1):
             type = "standard_esn"
-         print("Loss for %s with leaky %s and sw %s: %s" % (type, str(0.6+(leaky_iter)*0.2), str(1.2+(0.3*sw_iter)), losses[idx]))
+         print("Loss for %s with leaky %s and sw %s: %s" % (type, str(0.6+(leaky_iter)*0.2), str(0.8+(0.3*sw_iter)), losses[idx]))
          idx+=1
 
 # print(losses)

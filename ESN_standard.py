@@ -236,13 +236,17 @@ def ESN_Standard_Model(input_shape, num_outputs, num_timesteps, units, connectiv
 
 ## Y_train should be of shape (num_samples, num_timesteps, (num_outputs, num_wm_units)) to account for WM units
 
-def train_ESN_standard(X_train, Y_train, output_layer_size, epochs, units, connectivity, leaky, sw, spectral_radius):
+def train_ESN_standard(X_train, Y_train, output_layer_size, epochs, units, connectivity, leaky, sw, spectral_radius, experiment_name):
 
     loss_fn = keras.losses.MeanSquaredError(reduction='sum_over_batch_size')
     optimizer = keras.optimizers.legacy.Adam(learning_rate=0.01)
     loss_value_standard = None
     model = ESN_Standard_Model(input_shape = X_train.shape[-1], num_outputs = output_layer_size, num_timesteps=X_train.shape[2],  units=units, connectivity=connectivity, leaky=leaky, sw=sw, spectral_radius=spectral_radius)
     
+    f = open("losses\losses.txt", "a")
+    f.write("Experiment: {} \n".format(experiment_name))
+    f.close()
+
 
     for epoch in range(epochs):
 

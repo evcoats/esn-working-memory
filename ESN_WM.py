@@ -17,6 +17,7 @@ Activation = Union[None, str, Callable]
 Optimizer = Union[tf.keras.optimizers.Optimizer, str]
 
 
+
 # @keras.saving.register_keras_serializable()
 class ESN_WM_Cell(keras.layers.AbstractRNNCell):
     """Echo State recurrent Network (ESN) cell with Working Memory Units.
@@ -76,14 +77,14 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
         connectivity: float = 0.1,
         leaky: float = 1,
         sw: float = 1,
-        spectral_radius: float = 0.9,
+        spectral_radius: float = 0.5,
         use_norm2: bool = False,
         use_bias: bool = True,
         activation: Activation = "tanh",
         kernel_initializer: Initializer = "glorot_uniform",
         recurrent_initializer: Initializer = "glorot_uniform",
         bias_initializer: Initializer = "zeros",
-        wm_back_connectivity: float = 1,
+        wm_back_connectivity: float = 0.1,
 
         **kwargs
     ):
@@ -112,6 +113,7 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
     @property
     def output_size(self):
         return self._output_size
+
 
     def build(self, inputs_shape):
         input_size = tf.compat.dimension_value(tf.TensorShape(inputs_shape)[-1])
@@ -163,7 +165,7 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
             kernel_weights = tf.math.multiply(kernel_weights, connectivity_mask)
 
             return kernel_weights
-
+        
         
         self.sw = tf.Variable(self.sw, name="sw",
                         dtype=tf.float32,
@@ -212,7 +214,7 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
 
         self.wm_kernel = self.add_weight(
             name="wm_kernel",
-            shape=[input_size+self.units+self.wm_size, self.wm_size],
+            shape=[self.units + self.wm_size + input_size, self.wm_size],
             trainable=True,
             initializer=self.kernel_initializer,
             dtype=self.dtype,
@@ -226,11 +228,20 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
             dtype=self.dtype,
         )
 
+        self.wm_hidden = self.add_weight(
+            name = "wm_hidden",
+            shape = [self.wm_size, 50],
+            trainable = True,
+            initializer=tf.keras.initializers.RandomNormal(stddev=0.01),
+            dtype = self.dtype
+        )
+
+
         self.wm_self = self.add_weight(
             name = "wm_self",
-            shape = [self.wm_size, self.wm_size],
+            shape = [50, self.wm_size],
             trainable = True,
-            initializer=self.kernel_initializer,
+            initializer=tf.keras.initializers.RandomNormal(stddev=0.01),
             dtype = self.dtype
 
         )
@@ -247,6 +258,11 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
         self.built = True
 
     def call(self, inputs, state):
+
+        def half_activation(x):
+            return tf.where(x < 0, x*0-0.5, x*0+0.5)
+
+
         in_matrix = tf.concat([inputs*self.sw, state[0]], axis=1)
         weights_matrix = tf.concat([self.kernel, self.recurrent_kernel], axis=0)
 
@@ -262,19 +278,19 @@ class ESN_WM_Cell(keras.layers.AbstractRNNCell):
 
         wm_input = tf.concat([output, self.wmleaky*state[1]], axis=1)
 
-        wm_input = wm_input
-
         wm_input = tf.concat([wm_input, inputs], axis=1)
 
-        wm_output = tf.linalg.matmul(wm_input, self.wm_kernel) + self.wm_bias
+        wm_output = tf.linalg.matmul(self.wmscale*wm_input, self.wm_kernel) + self.wm_bias
 
-        wm_output = (wm_output + tf.linalg.matmul(wm_output, self.wm_self)) * self.wmscale        
+        wm_output = tf.linalg.matmul(wm_output, self.wm_hidden)
 
-        change = tf.linalg.matmul(wm_output, self.wm_kernel_back)
+        wm_output = tf.linalg.matmul(wm_output, self.wm_self)        
 
-        output = self.activation(output + self.wmb*change)
+        change = tf.linalg.matmul((half_activation(wm_output)), self.wm_kernel_back)
+
+        output = output + (self.wmb*change)
         
-        return (output,wm_output), (output,wm_output)
+        return (output,wm_output), (output,half_activation(wm_output))
 
     def get_config(self):
         config = {
@@ -330,7 +346,7 @@ def ESN_WM_Model(input_shape, num_outputs, num_timesteps, wm_size, units, connec
 
 ## Y_train should be of shape (num_samples, num_timesteps, (num_outputs, num_wm_units)) to account for WM units
 
-def train_ESN_WM(X_train, Y_train, output_layer_size, epochs, wm_size, units, connectivity, leaky,sw, spectral_radius):
+def train_ESN_WM(X_train, Y_train, output_layer_size, epochs, wm_size, units, connectivity, leaky,sw, spectral_radius, experiment_name):
 
     loss_fn = keras.losses.MeanSquaredError(reduction='sum_over_batch_size')
     optimizer = keras.optimizers.legacy.Adam(learning_rate=0.01)
@@ -339,6 +355,9 @@ def train_ESN_WM(X_train, Y_train, output_layer_size, epochs, wm_size, units, co
 
     model = ESN_WM_Model(input_shape = X_train.shape[-1], num_outputs = output_layer_size, num_timesteps=X_train.shape[2], wm_size=wm_size, units=units, connectivity=connectivity, leaky=leaky, sw=sw, spectral_radius=spectral_radius)
     
+    f = open("losses\losses.txt", "a")
+    f.write("Experiment: {} \n".format(experiment_name))
+    f.close()
 
     for epoch in range(epochs):
 
@@ -361,7 +380,7 @@ def train_ESN_WM(X_train, Y_train, output_layer_size, epochs, wm_size, units, co
 
                 loss_value_standard = loss_fn(y_true = y_batch_train[:,:,0], y_pred = predictions[0][:,:,0])
 
-                loss_value_wm = loss_fn(y_true = y_batch_train[:,:,1:], y_pred = predictions[1][:,:,:])
+                loss_value_wm = loss_fn(y_true = y_batch_train[:,:,X_train.shape[-1]:], y_pred = predictions[1][:,:,:])
 
 
 

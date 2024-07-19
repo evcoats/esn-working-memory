@@ -41,3 +41,281 @@ WM Loss: 0.20286273956298828
 ESNSTD w/ 1 50 500 0.1 0.8 1.4 1.0 
 Standard Loss: 0.06558944284915924 
 
+Experiment: usage1 
+ESNWM w/ 1 50 5 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.0723147764801979 
+WM Loss: 0.07114440202713013 
+
+Experiment: usage1 
+ESNWM w/ 1 1 5 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.13300471007823944 
+WM Loss: 0.27901774644851685 
+
+Experiment: usage_experiment 
+ESNSTD w/ 1 1 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.10291764885187149 
+
+Experiment: usage1 
+ESNWM w/ 1 1 5 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.12486711144447327 
+WM Loss: 0.4158920645713806 
+
+Experiment: usage_experiment 
+ESNSTD w/ 1 1 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.10419826954603195 
+
+Experiment: experiment1 
+ESNWM w/ 1 1 3 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.16892002522945404 
+WM Loss: 0.4839352071285248 
+
+Experiment: experiment1 
+ESNWM w/ 1 1 3 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.12302593141794205 
+WM Loss: 0.46919286251068115 
+
+Experiment: experiment1 
+ESNWM w/ 1 1 3 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.13188594579696655 
+WM Loss: 0.48147258162498474 
+
+Experiment: experiment1 
+Experiment: experiment1 
+ESNWM w/ 1 1 3 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.29505184292793274 
+WM Loss: 0.502751350402832 
+
+Experiment: experiment1 
+ESNWM w/ 1 1 3 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.12028149515390396 
+WM Loss: 0.545258104801178 
+
+Experiment: experiment1 
+ESNWM w/ 1 1 3 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.13764333724975586 
+WM Loss: 0.4399048089981079 
+
+Experiment: experiment1 
+ESNSTD w/ 1 1 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.12007524818181992 
+
+Experiment: experiment1 
+ESNWM w/ 1 1 3 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.13634158670902252 
+WM Loss: 0.27649927139282227 
+
+Experiment: experiment1 
+ESNSTD w/ 1 1 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.11796601861715317 
+
+Experiment: experiment1 
+Experiment: experiment1 
+ESNWM w/ 1 1 3 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.13183380663394928 
+WM Loss: 0.26712939143180847 
+
+Experiment: experiment1 
+ESNWM w/ 1 1 3 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.1479472815990448 
+WM Loss: 0.25577712059020996 
+
+Experiment: experiment1 
+ESNSTD w/ 1 1 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.1201891154050827 
+
+Experiment: experiment1 
+Experiment: experiment1 
+ESNWM w/ 1 1 3 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.13439223170280457 
+WM Loss: 0.1997959017753601 
+
+Experiment: experiment1 
+ESNSTD w/ 1 1 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.12059946358203888 
+
+Experiment: experiment1 
+ESNWM w/ 1 1 3 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.16633015871047974 
+WM Loss: 0.22344675660133362 
+
+Experiment: experiment1 
+ESNSTD w/ 1 1 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.11909044533967972 
+
+Experiment: experiment1 
+Experiment: experiment1 
+ESNWM w/ 1 1 3 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.21095356345176697 
+WM Loss: 0.32602909207344055 
+
+Experiment: experiment1 
+ESNSTD w/ 1 1 500 0.1 0.6 0.8 1.0 
+Standard Loss: 0.1210467517375946 
+
+Experiment: experiment1 
+ESNWM w/ 1 3 3 500 0.1 0.8 1.4 0.5 
+Standard Loss: 0.1211039274930954 
+WM Loss: 0.16544418036937714 
+
+Experiment: experiment1 
+ESNWM w/ 1 3 3 300 0.1 0.8 1.4 0.5 
+Standard Loss: 0.14065955579280853 
+WM Loss: 0.17152374982833862 
+
+Experiment: experiment1 
+Experiment: experiment2 
+Experiment: experiment2 
+ESNWM w/ 3 3 2 300 0.1 0.8 1.4 0.5 
+Standard Loss: 1.5511915989918634e-05 
+WM Loss: 2.3133093236538116e-06 
+
+Experiment: experiment2 
+Experiment: experiment2 
+ESNWM w/ 3 3 2 300 0.1 0.8 1.4 0.5 
+Standard Loss: 0.0010753798997029662 
+WM Loss: 0.0001473296870244667 
+
+Experiment: experiment2 
+ESNWM w/ 3 3 2 300 0.1 0.8 1.4 0.5 
+Standard Loss: 2.902230335166678e-05 
+WM Loss: 0.0010764839826151729 
+
+Experiment: experiment2 
+ESNWM w/ 3 3 2 300 0.1 0.8 1.4 0.5 
+Standard Loss: 0.018721679225564003 
+WM Loss: 0.11627782136201859 
+
+Experiment: experiment2 
+ESNWM w/ 3 10 2 300 0.1 0.8 1.4 0.5 
+Standard Loss: 5.52888959646225e-05 
+WM Loss: 0.058065544813871384 
+
+Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.02166489139199257 
+WM Loss: 0.1995079517364502 
+
+Experiment: experiment2 
+ESNSTD w/ 1 1 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.020559458062052727 
+
+Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.4000000000000001 0.5 
+Standard Loss: 0.019502880051732063 
+WM Loss: 0.159677654504776 
+
+--------------------------------------
+
+Experiment: experiment2 
+ESNWM w/ 3 10 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.00015962307224981487 
+WM Loss: 0.05688708648085594 
+
+Experiment: experiment2 
+ESNSTD w/ 1 10 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.011189856566488743 
+
+Experiment: experiment2 
+ESNWM w/ 3 10 2 300 0.1 0.6 1.4000000000000001 0.5 
+Standard Loss: 0.00021727359853684902 
+WM Loss: 0.05856481194496155 
+
+Experiment: experiment2 
+ESNSTD w/ 1 10 300 0.1 0.6 1.4000000000000001 0.5 
+Standard Loss: 0.007710221689194441 
+
+Experiment: experiment2 
+ESNWM w/ 3 10 2 300 0.1 0.6 1.7000000000000002 0.5 
+Standard Loss: 0.00025090546114370227 
+WM Loss: 0.05840570852160454 
+
+Experiment: experiment2 
+ESNSTD w/ 1 10 300 0.1 0.6 1.7000000000000002 0.5 
+Standard Loss: 0.00801186915487051 
+
+Experiment: experiment2 
+ESNWM w/ 3 10 2 300 0.1 0.8 1.1 0.5 
+Standard Loss: 3.524631028994918e-05 
+WM Loss: 0.05624852329492569 
+
+Experiment: experiment2 
+ESNSTD w/ 1 10 300 0.1 0.8 1.1 0.5 
+Standard Loss: 0.011830391362309456 
+
+Experiment: experiment2 
+ESNWM w/ 3 10 2 300 0.1 0.8 1.4000000000000001 0.5 
+Standard Loss: 0.0003922219038940966 
+WM Loss: 0.05965324491262436 
+
+Experiment: experiment2 
+ESNSTD w/ 1 10 300 0.1 0.8 1.4000000000000001 0.5 
+Standard Loss: 0.010470784269273281 
+
+Experiment: experiment2 
+ESNWM w/ 3 10 2 300 0.1 0.8 1.7000000000000002 0.5 
+Standard Loss: 0.0005176785052753985 
+WM Loss: 0.05940478667616844 
+
+Experiment: experiment2 
+ESNSTD w/ 1 10 300 0.1 0.8 1.7000000000000002 0.5 
+Standard Loss: 0.008723720908164978 Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.01647677831351757 
+WM Loss: 0.12322530150413513 
+
+Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.018258972093462944 
+WM Loss: 0.18914617598056793 
+
+Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.026897314935922623 
+WM Loss: 0.19057801365852356 
+
+Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.01808636449277401 
+WM Loss: 0.20117545127868652 
+
+Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.022388678044080734 
+WM Loss: 0.14533354341983795 
+
+Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.017032263800501823 
+WM Loss: 0.20375315845012665 
+
+Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.021045854315161705 
+WM Loss: 0.20307022333145142 
+
+Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.021640285849571228 
+WM Loss: 0.2053813934326172 
+
+Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.02691194787621498 
+WM Loss: 0.2003042846918106 
+
+Experiment: experiment2 
+Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.047901853919029236 
+WM Loss: 0.14565138518810272 
+
+Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.0206869188696146 
+WM Loss: 0.15181124210357666 
+
+Experiment: experiment2 
+ESNWM w/ 3 1 2 300 0.1 0.6 1.1 0.5 
+Standard Loss: 0.038616444915533066 
+WM Loss: 0.1857227236032486 
+

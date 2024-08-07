@@ -262,7 +262,7 @@ def train_ESN_standard(X_train, Y_train, output_layer_size, epochs, units, conne
                 # Forward pass.
                 predictions = model(x_batch_train)
 
-                loss_value_standard = loss_fn(y_true = y_batch_train[:,:,0], y_pred = predictions[:,:,0])
+                loss_value_standard = loss_fn(y_true = y_batch_train[:,:], y_pred = predictions[:,:,0])
 
             # Get gradients of loss wrt the *trainable* weights.
             gradients_standard = tape.gradient(loss_value_standard, model.trainable_weights)
@@ -274,11 +274,11 @@ def train_ESN_standard(X_train, Y_train, output_layer_size, epochs, units, conne
             
             step1 += 1
 
-            if step1 % 5 == 0:
-                print(
-                    "Training loss (for general loss) at step %d: %.4f"
-                    % (step1, float(loss_value_standard))
-                )
+            # if step1 % 5 == 0:
+            print(
+                "Training loss (for general loss) at step %d: %.4f"
+                % (step1, float(loss_value_standard))
+            )
 
     f = open("losses\losses.txt", "a")
 

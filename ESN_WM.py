@@ -380,7 +380,7 @@ def train_ESN_WM(X_train, Y_train, output_layer_size, epochs, wm_size, units, co
 
                 loss_value_standard = loss_fn(y_true = y_batch_train[:,:,0], y_pred = predictions[0][:,:,0])
 
-                loss_value_wm = loss_fn(y_true = y_batch_train[:,:,X_train.shape[-1]:], y_pred = predictions[1][:,:,:])
+                loss_value_wm = loss_fn(y_true = y_batch_train[:,:,1:], y_pred = predictions[1][:,:,:])
 
 
 
@@ -410,15 +410,15 @@ def train_ESN_WM(X_train, Y_train, output_layer_size, epochs, wm_size, units, co
             
             step1 += 1
 
-            if step1 % 5 == 0:
-                print(
-                    "Training loss (for general loss) at step %d: %.4f"
-                    % (step1, float(loss_value_standard))
-                )
-                print(
-                    "Training loss (for wm loss) at step %d: %.4f"
-                    % (step1, float(loss_value_wm))
-                )
+            # if step1 % 5 == 0:
+            print(
+                "Training loss (for general loss) at step %d: %.4f"
+                % (step1, float(loss_value_standard))
+            )
+            print(
+                "Training loss (for wm loss) at step %d: %.4f"
+                % (step1, float(loss_value_wm))
+            )
 
     f = open("losses\losses.txt", "a")
 

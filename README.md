@@ -4,6 +4,10 @@ TensorFlow implementation of Echo-State Network with WM (working memory) unit de
 
 [ESN_WM-usage.py](ESN_WM-usage.py) has basic tests based on switching sin functions to negative with memory of certain inputs. This demonstrates a basic difference between the ESN w/ WM and standard ESN, namely, that the output layer of the ESN can utilize, through the reservoir, the WM memory to transform the output, while the standard ESN cannot. Further, the standard ESN is not able to perform certain transformations on inputs throughout time, while the ESN w/ WM can. The [two figures](/figures) show the difference after 100 epochs between the ESN w/ WM and the standard ESN. 
 
+Experiments 1-3 are listed in their respective files.
+
+[experiment3.py](experiment3.py) utilizes EEG data from the Physionet [Auditory evoked potential EEG-Biometric dataset](https://physionet.org/content/auditory-eeg/1.0.0/Filtered_Data/#files-panel)
+
 
 
 
